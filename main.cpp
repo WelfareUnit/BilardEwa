@@ -14,9 +14,10 @@ Sprawdzaj, czy któraś z rozpędzonych bil, z odpowiednia dokładnością, traf
 Odpowiednie wzory opisujące zderzenia dwóch bil znajdziesz w http://ccfd.github.io/courses/info1_lab05.html.
 */
 
-int oknoX = 1280, oknoY = 700; //rozmiary okna
-int stolX = oknoX - 40, stolY = oknoY - 40; //rozmiary stołu, oddalone od krawedzi okna o 40
-int dziury = 50; //rozmiar dziur na bile
+const int oknoX = 1280, oknoY = 700; //rozmiary okna
+const int stolX = oknoX - 40, stolY = oknoY - 40; //rozmiary stołu, oddalone od krawedzi okna o 40
+const int dziury = 50; //rozmiar dziur na bile
+const double straty = 0.9;
 const int framerate = 75;
 void rysowaniestolu()
 {
@@ -29,9 +30,9 @@ void rysowaniestolu()
     
     //dziury w stole
     setpalette(15, LIGHTRED);
-    line(40, 40+dziury, stolX, 40+ dziury);
-    line(40, stolY- dziury, stolX, stolY- dziury);
-    line(40+ dziury, 40, 40+ dziury, stolY);
+    line(40, 40 + dziury, stolX, 40 + dziury);
+    line(40, stolY - dziury, stolX, stolY - dziury);
+    line(40 + dziury, 40, 40 + dziury, stolY);
     line(stolX - dziury, 40, stolX - dziury, stolY);
 
 }
@@ -45,7 +46,6 @@ void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
     int miY = 40 + odl;
     int Lx = maX - miX + 1;
     int Ly = maY - miY + 1;
-    double odlx, odly;
     srand(time(NULL)); //losowanie pozycji bil, mieszczących się na boisku http://ccfd.github.io/courses/info1_lab04.html
     for (int i = 0; i < N; i++)
     {
@@ -71,8 +71,8 @@ void ruszpilki(double* x, double* xV, double* y, double* yV, int N)
     for (int i = 0; i < N; i++) 
     {
         if (x[i] == -10) continue; //dla wpadniętych kulek
-        x[i] += xV[i]*75/framerate;
-        y[i] += yV[i]*75 / framerate;
+        x[i] += xV[i]*10/framerate;
+        y[i] += yV[i]*10 / framerate;
     }
 }
 void czywpadlo(double* x, double* y, double r, int N)
@@ -89,7 +89,6 @@ void czywpadlo(double* x, double* y, double r, int N)
 }
 void kolizjazesciana(double* x, double* xV, double* y, double* yV,int r, int N)
 {
-    double odlx, odly;
     for (int i = 0; i < N; i++)
     {
         if (x[i] == -10) continue;
@@ -115,7 +114,35 @@ void kolizjazesciana(double* x, double* xV, double* y, double* yV,int r, int N)
         }
     }
 }
-void rysowaniepilek(double* x, double* y, double r, int N)
+void kolizjezpilkami(double* x, double* xV, double* y, double* yV, int r, int N) //https://www.meil.pw.edu.pl/za/content/download/14569/80547/file/Info1Lab052.pdf
+{
+    double L = 10000;
+    double v1x, v1y, nx,ny,vnx,vny, v1nx, v1ny;
+    for (int i = 0; i < N; i++)
+    {
+        if (x[i] == -10) continue; //nie liczymy wpadniętych kulek
+        for (int j = 0; j < i; j++)
+        {
+            L = sqrt(pow(x[i] - x[j], 2) + pow(y[i] - y[j], 2));  //mierzenie odległości między pilkami po kolei
+            if (L < 2 * r)                                        //jesli ta odleglosc jest mniejsza niz dwa promienie
+            {
+                v1x = xV[i] - xV[j];
+                v1y = yV[i] - yV[j];
+                nx = (x[i] - x[j]) / L;
+                ny = (y[i] - y[j]) / L;
+                vnx = (v1x * nx + v1y * ny) * nx;
+                vny = (v1x * nx + v1y * ny) * ny;
+                v1nx = v1x - vnx;
+                v1ny = v1y - vny;
+                xV[i] += v1nx;
+                yV[i] += v1ny;
+                xV[j] += vnx;
+                yV[j] += vny;
+            }
+        }
+    }
+}
+void rysowaniepilek(double* x, double* y, int r, int N)
 {
     int i = 0;
     setpalette(15, WHITE);
@@ -133,7 +160,7 @@ int main()
 {
 
     graphics(oknoX, oknoY);
-    int N = 5; //liczba bil
+    int N = 16; //liczba bil
     // dynamiczne alokowanie pamięci na wspolrzedne bili (bila "0" to biała)
     double* xp;
     double* yp; 
@@ -146,13 +173,14 @@ int main()
     yVp = (double*)malloc(N * sizeof(double));
     losowaniepilek(xp, xVp, yp, yVp, rp, N);
     rysowaniepilek(xp, yp, rp, N);
-    for (int i = 0; i < 500; i++) 
+    for (int i = 0; i < 500*framerate; i++) 
     {
         animate(framerate);   // jako argument funkcji wpisujemy ilość klatek na sekundę (oczekiwanie przez 10 ms)
         clear();
         rysowaniestolu();
         ruszpilki(xp,xVp,yp,yVp,N);
         czywpadlo(xp, yp, rp, N);
+        kolizjezpilkami(xp, xVp, yp, yVp, rp, N);
         kolizjazesciana(xp, xVp, yp, yVp, rp, N);
         rysowaniepilek(xp, yp, rp, N);
     }
