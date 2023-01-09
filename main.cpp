@@ -36,13 +36,41 @@ void rysowaniestolu()
     line(stolX - dziury, 40, stolX - dziury, stolY);
 
 }
-void strzal()
+void strzal(double *xV , double *yV)
 {
-    printf{"Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol"}
-        switch (switch_on)
+    int kierunek;
+    double sila = 0.0;
+    while (sila > 10 || sila < 1)
+    {
+        printf("Podaj sile od 1-10");
+        scanf("%lf", & sila);
+    }
+    printf("Wybrana sila: %lf\n", &sila);
+    printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol");
+        switch (kierunek)
         {
         case 1:
-            aaaaa
+            xV[0] = 10 * sila;
+        case 2:
+            xV[0] = -10 * sila;
+        case 3:
+            yV[0] = 10 * sila;
+        case 4:
+            yV[0] = - 10 * sila;
+        case 5:
+            xV[0] = 10 * sila;
+            yV[0] = - 10 * sila;
+        case 6:
+            xV[0] = -10 * sila;
+            yV[0] = - 10 * sila;
+        case 7:
+            xV[0] = -10 * sila;
+            yV[0] =  10 * sila;
+        case 8:
+            xV[0] = -10 * sila;
+            yV[0] =  10 * sila;
+
+
         default:
             break;
         }
