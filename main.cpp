@@ -13,7 +13,7 @@ Następnie zasymuluj ruch bili oraz zderzenia miedzy bilami oraz ściankami.
 Sprawdzaj, czy któraś z rozpędzonych bil, z odpowiednia dokładnością, trafi w róg stołu(wykrywaj takie zdarzenie – bila powinna wtedy znikać).
 Odpowiednie wzory opisujące zderzenia dwóch bil znajdziesz w http://ccfd.github.io/courses/info1_lab05.html.
 */
-
+//TODO: Można dodać jeszcze licznik wpadających bil, ładniejszy stół, straty energii i potem możliwość ponownego strzału jak się zatrzymają.
 const int oknoX = 1280, oknoY = 700; //rozmiary okna
 const int stolX = oknoX - 40, stolY = oknoY - 40; //rozmiary stołu, oddalone od krawedzi okna o 40
 const int dziury = 60; //rozmiar dziur na bile
@@ -110,7 +110,7 @@ void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
        
         x[i] = rand() % Lx + miX;
         y[i] = rand() % Ly + miY;
-        xV[i] = 0.0;                    // do testów kolizji dorzucałem tutaj na początek coś, ale ogólnie są stacjonarne
+        xV[i] = 0.0;                    // do testów kolizji dorzucałem tutaj na początek coś, ale ogólnie są stacjonarne więc V na poczatku = 0
         yV[i] = 0.0;
         for (int j = 0 ; j<i ; j++)         //sprawdzamy terz z poprzednio wylosowanymi, czy się nie nachodzi
         {
@@ -129,7 +129,7 @@ void ruszpilki(double* x, double* xV, double* y, double* yV, int N)
     for (int i = 0; i < N; i++) 
     {
         if (x[i] == -10) continue; //dla wpadniętych kulek nie liczymy ruchu
-        x[i] += xV[i]*10 / framerate;
+        x[i] += xV[i]*10 / framerate;       //żeby niezależnie od klatek na sekundę tak samo szybko się ruszały, x = T*v, h = 1/T, x=v/h
         y[i] += yV[i]*10 / framerate;
     }
 }
