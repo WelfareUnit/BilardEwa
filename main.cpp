@@ -38,17 +38,19 @@ void rysowaniestolu()
 }
 void strzalpilek(double* xV, double* yV)
 {
-    int kierunek;
+    int kierunek = 0;
     double sila = 0.0;
     while (sila > 10 || sila < 1)
     {
         printf("Podaj sile od 1-10");
         scanf("%lf", &sila);
     }
-    printf("Wybrana sila: %lf\n", &sila);
-    while (sila > 10 || sila < 1)
+    printf("Wybrana sila: %lf\n", sila);
+    while (kierunek > 10 || kierunek < 1)
     {
-        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol"); switch (kierunek)
+        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol"); 
+        scanf_s("%d", &kierunek);
+        switch (kierunek)
         {
         case 1:
             xV[0] = 10 * sila;
@@ -133,7 +135,7 @@ void kolizjazesciana(double* x, double* xV, double* y, double* yV,int r, int N)
         if (x[i] == -10) continue;
         if (x[i] - 40 < r) 
         {
-            x[i] = 40 + r + 2;
+            x[i] = 40.0 + r + 2;
             xV[i] -= 2 * xV[i];
         }
         else if (stolX - x[i] < r)
@@ -212,7 +214,7 @@ int main()
     yVp = (double*)malloc(N * sizeof(double));
     losowaniepilek(xp, xVp, yp, yVp, rp, N);
     rysowaniepilek(xp, yp, rp, N);
-
+    strzalpilek(xVp, yVp);
     for (int i = 0; i < 500*framerate; i++) 
     {
         animate(framerate);   // jako argument funkcji wpisujemy ilość klatek na sekundę (oczekiwanie przez 10 ms)
