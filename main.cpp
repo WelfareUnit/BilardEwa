@@ -16,7 +16,7 @@ Odpowiednie wzory opisujące zderzenia dwóch bil znajdziesz w http://ccfd.githu
 
 const int oknoX = 1280, oknoY = 700; //rozmiary okna
 const int stolX = oknoX - 40, stolY = oknoY - 40; //rozmiary stołu, oddalone od krawedzi okna o 40
-const int dziury = 50; //rozmiar dziur na bile
+const int dziury = 60; //rozmiar dziur na bile
 const double straty = 0.9;
 const int framerate = 75;
 void rysowaniestolu()
@@ -49,35 +49,51 @@ void strzalpilek(double* xV, double* yV)
     printf("Wybrana sila: %lf\n", sila);
     while (kierunek > 8 || kierunek < 1)
     {
-        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo gora\n6 = lewo gora\n7 = prawo dol\n8 = lewo dol\nKierunek = "); 
-        scanf_s("%d", &kierunek);
+        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3 = gora \n4 = dol \n5 = prawo gora\n6 = lewo gora\n7 = prawo dol\n8 = lewo dol\nKierunek = "); 
+        scanf("%d", &kierunek);
+        printf("\nKierunek nr %d", kierunek);
         switch (kierunek)
         {
         case 1:
             xV[0] = 10 * sila;
+            yV[0] = 0;
+            break;
         case 2:
             xV[0] = -10 * sila;
+            yV[0] = 0;
+            break;
         case 3:
             yV[0] = 10 * sila;
+            xV[0] = 0;
+            break;
         case 4:
             yV[0] = -10 * sila;
+            xV[0] = 0;
+            break;
         case 5:
             xV[0] = 10 * sila;
             yV[0] = -10 * sila;
+            break;
         case 6:
             xV[0] = -10 * sila;
             yV[0] = -10 * sila;
+            break;
         case 7:
             xV[0] = -10 * sila;
             yV[0] = 10 * sila;
+            break;
         case 8:
             xV[0] = -10 * sila;
             yV[0] = 10 * sila;
+            break;
         default:
+            printf("Gówno");
+            kierunek = 0;
+            yV[0] = 0;
+            xV[0] = 0;
             break;
         }
     }
-    printf("kierunek nr %d", kierunek);
 }
 void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
 {
@@ -94,8 +110,8 @@ void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
        
         x[i] = rand() % Lx + miX;
         y[i] = rand() % Ly + miY;
-        xV[i] = 0; // do testów kolizji dorzucić tutaj na początek coś
-        yV[i] = 0;
+        xV[i] = 0.0; // do testów kolizji dorzucić tutaj na początek coś
+        yV[i] = 0.0;
         for (int j = 0 ; j<i ; j++)
         {
             odl = sqrt(pow(x[i] - x[j], 2)+ pow(y[i] - y[j], 2)); //mierzenie odległości między wylosowanymi kulkami
@@ -113,7 +129,7 @@ void ruszpilki(double* x, double* xV, double* y, double* yV, int N)
     for (int i = 0; i < N; i++) 
     {
         if (x[i] == -10) continue; //dla wpadniętych kulek
-        x[i] += xV[i]*10/framerate;
+        x[i] += xV[i]*10 / framerate;
         y[i] += yV[i]*10 / framerate;
     }
 }
@@ -202,7 +218,7 @@ int main()
 {
 
     graphics(oknoX, oknoY);
-    int N = 16; //liczba bil
+    int N = 25; //liczba bil
     // dynamiczne alokowanie pamięci na wspolrzedne bili (bila "0" to biała)
     double* xp;
     double* yp; 
@@ -215,6 +231,7 @@ int main()
     yVp = (double*)malloc(N * sizeof(double));
     losowaniepilek(xp, xVp, yp, yVp, rp, N);
     rysowaniepilek(xp, yp, rp, N);
+    rysowaniestolu();
     strzalpilek(xVp, yVp);
     for (int i = 0; i < 500*framerate; i++) 
     {
