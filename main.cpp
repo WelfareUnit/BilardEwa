@@ -42,13 +42,13 @@ void strzalpilek(double* xV, double* yV)
     double sila = 0.0;
     while (sila > 10 || sila < 1)
     {
-        printf("Podaj sile od 1-10");
+        printf("Podaj sile od 1-10\nSila = ");
         scanf("%lf", &sila);
     }
     printf("Wybrana sila: %lf\n", sila);
-    while (kierunek > 10 || kierunek < 1)
+    while (kierunek > 8 || kierunek < 1)
     {
-        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol"); 
+        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo gora\n6 = lewo gora\n7 = prawo dol\n8 = lewo dol\nKierunek = "); 
         scanf_s("%d", &kierunek);
         switch (kierunek)
         {
@@ -93,8 +93,8 @@ void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
        
         x[i] = rand() % Lx + miX;
         y[i] = rand() % Ly + miY;
-        xV[i] = 10; // do testów kolizji dorzucić tutaj na początek coś
-        yV[i] = 10;
+        xV[i] = 0; // do testów kolizji dorzucić tutaj na początek coś
+        yV[i] = 0;
         for (int j = 0 ; j<i ; j++)
         {
             odl = sqrt(pow(x[i] - x[j], 2)+ pow(y[i] - y[j], 2)); //mierzenie odległości między wylosowanymi kulkami
@@ -155,7 +155,7 @@ void kolizjazesciana(double* x, double* xV, double* y, double* yV,int r, int N)
         }
     }
 }
-void kolizjezpilkami(double* x, double* xV, double* y, double* yV, int r, int N) //https://www.meil.pw.edu.pl/za/content/download/14569/80547/file/Info1Lab052.pdf
+void kolizjezpilkami(double* x, double* cx, double* y, double* cy, int r, int N) //https://www.meil.pw.edu.pl/za/content/download/14569/80547/file/Info1Lab052.pdf
 {
     double L = 10000;
     double v1x, v1y, nx,ny,vnx,vny, v1nx, v1ny;
@@ -164,21 +164,21 @@ void kolizjezpilkami(double* x, double* xV, double* y, double* yV, int r, int N)
         if (x[i] == -10) continue; //nie liczymy wpadniętych kulek
         for (int j = 0; j < i; j++)
         {
-            L = sqrt(pow(x[i] - x[j], 2) + pow(y[i] - y[j], 2));  //mierzenie odległości między pilkami po kolei
-            if (L < 2 * r)                                        //jesli ta odleglosc jest mniejsza niz dwa promienie
+            L = sqrt(pow(x[i] - x[j], 2) + pow(y[i] - y[j], 2));    //mierzenie odległości między pilkami po kolei
+            if (L < 2.0 * r)                                        //jesli ta odleglosc jest mniejsza niz dwa promienie, mamy zderzenie
             {
-                v1x = xV[i] - xV[j];
-                v1y = yV[i] - yV[j];
+                v1x = cx[i] - cx[j];
+                v1y = cy[i] - cy[j];
                 nx = (x[i] - x[j]) / L;
                 ny = (y[i] - y[j]) / L;
+                x[i] += nx * 2 * r / L;	                            //zmiana miejsca, zeby sie nie wywalalo
+                y[i] += ny * 2 * r / L;
                 vnx = (v1x * nx + v1y * ny) * nx;
                 vny = (v1x * nx + v1y * ny) * ny;
-                v1nx = v1x - vnx;
-                v1ny = v1y - vny;
-                xV[i] += v1nx;
-                yV[i] += v1ny;
-                xV[j] += vnx;
-                yV[j] += vny;
+                cx[i] -= vnx;
+                cy[i] -= vny;
+                cx[j] += vnx;
+                cy[j] += vny;
             }
         }
     }
