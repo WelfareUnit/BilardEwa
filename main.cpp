@@ -97,28 +97,28 @@ void strzalpilek(double* xV, double* yV)
 }
 void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
 {
-    int odl = r + 30; // odleglosc srodka wylosowanych od krawedzi
-    int maX = stolX - odl;
+    int odl = r + dziury; // odleglosc srodka wylosowanych od krawedzi, żeby nie losowały się już w dziurze
+    int maX = stolX - odl;  //maksymalne przedziały w których losujemy bile, 
     int miX = 40 + odl;
     int maY = stolY - odl;
     int miY = 40 + odl;
     int Lx = maX - miX + 1;
     int Ly = maY - miY + 1;
-    srand(time(NULL)); //losowanie pozycji bil, mieszczących się na boisku http://ccfd.github.io/courses/info1_lab04.html
-    for (int i = 0; i < N; i++)
+    srand(time(NULL)); 
+    for (int i = 0; i < N; i++)     //losowanie pozycji bil, mieszczących się na boisku http://ccfd.github.io/courses/info1_lab04.html
     {
        
         x[i] = rand() % Lx + miX;
         y[i] = rand() % Ly + miY;
-        xV[i] = 0.0; // do testów kolizji dorzucić tutaj na początek coś
+        xV[i] = 0.0;                    // do testów kolizji dorzucałem tutaj na początek coś, ale ogólnie są stacjonarne
         yV[i] = 0.0;
-        for (int j = 0 ; j<i ; j++)
+        for (int j = 0 ; j<i ; j++)         //sprawdzamy terz z poprzednio wylosowanymi, czy się nie nachodzi
         {
             odl = sqrt(pow(x[i] - x[j], 2)+ pow(y[i] - y[j], 2)); //mierzenie odległości między wylosowanymi kulkami
             if (odl< 2*r)
             {
                 i--; //bila będzie jeszcze raz wylosowana, jeśli jej pozycja "nachodzi" na inną bilę
-                break; //nie ma co sprawdzać z następnymi, jak tu już się nie zgadza - wracamy "do góry"
+                break; //nie ma co sprawdzać z następnymi, jak tu już się nie zgadza - wracamy "do góry" i jeszcze raz ją losujemy
             }
 
         }
@@ -128,7 +128,7 @@ void ruszpilki(double* x, double* xV, double* y, double* yV, int N)
 {
     for (int i = 0; i < N; i++) 
     {
-        if (x[i] == -10) continue; //dla wpadniętych kulek
+        if (x[i] == -10) continue; //dla wpadniętych kulek nie liczymy ruchu
         x[i] += xV[i]*10 / framerate;
         y[i] += yV[i]*10 / framerate;
     }
@@ -216,33 +216,32 @@ void rysowaniepilek(double* x, double* y, int r, int N)
 }
 int main()
 {
-
     graphics(oknoX, oknoY);
     int N = 25; //liczba bil
     // dynamiczne alokowanie pamięci na wspolrzedne bili (bila "0" to biała)
-    double* xp;
-    double* yp; 
-    double* xVp;
+    double* xp; //tablice na współrzędne bil
+    double* yp;     
+    double* xVp;    // tablice na prędkość bil w danej osi
     double* yVp;
     int rp = dziury/4; // promień piłki
     xp = (double*)malloc(N * sizeof(double));   //wspolrzedne bili
     yp = (double*)malloc(N * sizeof(double));   
     xVp = (double*)malloc(N * sizeof(double));  //predkosc bili
     yVp = (double*)malloc(N * sizeof(double));
-    losowaniepilek(xp, xVp, yp, yVp, rp, N);
-    rysowaniepilek(xp, yp, rp, N);
-    rysowaniestolu();
-    strzalpilek(xVp, yVp);
-    for (int i = 0; i < 500*framerate; i++) 
+    losowaniepilek(xp, xVp, yp, yVp, rp, N);    //najpierw losujemy położenie bil (piłek bo mi się porąbąło xD)
+    rysowaniepilek(xp, yp, rp, N);              //i je rysujemy, żeby użytkownik wiedział gdzie strzelić białą
+    rysowaniestolu();                           //nio i narysowany stół też się przyda
+    strzalpilek(xVp, yVp);                      //i strzelamy białą
+    for (int i = 0; i < 500*framerate; i++)     // potem zaczyna się zabawa, petla na 500 sekund
     {
-        animate(framerate);   // jako argument funkcji wpisujemy ilość klatek na sekundę (oczekiwanie przez 10 ms)
-        clear();
-        rysowaniestolu();
-        ruszpilki(xp,xVp,yp,yVp,N);
-        czywpadlo(xp, yp, rp, N);
-        kolizjezpilkami(xp, xVp, yp, yVp, rp, N);
-        kolizjazesciana(xp, xVp, yp, yVp, rp, N);
-        rysowaniepilek(xp, yp, rp, N);
+        animate(framerate);   // jako argument funkcji wpisujemy ilość klatek na sekundę jaką chcemy otrzymać
+        clear();                //co każdą klatkę czyścimy ekran żeby nie było śladu poprzedniego kroku
+        rysowaniestolu();       //więc trzeba narysować stół
+        ruszpilki(xp,xVp,yp,yVp,N);     //ruszyć piłki zgodnie z ich prędkością
+        czywpadlo(xp, yp, rp, N);       //sprawdzić czy po ruchu któraś wpadła do dziury
+        kolizjezpilkami(xp, xVp, yp, yVp, rp, N);   //obliczyć kolizje z piłkami
+        kolizjazesciana(xp, xVp, yp, yVp, rp, N);   // i ścianami
+        rysowaniepilek(xp, yp, rp, N);              //i finalnie narysować bile (piłki)
     }
 
     return 0;
