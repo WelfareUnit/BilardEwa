@@ -40,7 +40,7 @@ void strzalpilek(double* xV, double* yV)
 {
     int kierunek = 0;
     double sila = 0.0;
-    outtextxy(oknoX / 2, 10, "PRZEJDZ NA OKNO KONSOLI");
+    outtextxy(oknoX / 2 - 5, 10, "PRZEJDZ NA OKNO KONSOLI");
     while (sila > 10 || sila < 1)
     {
         printf("Podaj sile od 1-10\nSila = ");
@@ -63,11 +63,11 @@ void strzalpilek(double* xV, double* yV)
             yV[0] = 0;
             break;
         case 3:
-            yV[0] = 10 * sila;
+            yV[0] = -10 * sila;
             xV[0] = 0;
             break;
         case 4:
-            yV[0] = -10 * sila;
+            yV[0] = 10 * sila;
             xV[0] = 0;
             break;
         case 5:
@@ -79,7 +79,7 @@ void strzalpilek(double* xV, double* yV)
             yV[0] = -10 * sila;
             break;
         case 7:
-            xV[0] = -10 * sila;
+            xV[0] = 10 * sila;
             yV[0] = 10 * sila;
             break;
         case 8:
