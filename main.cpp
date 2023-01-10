@@ -46,6 +46,8 @@ void strzal(double *xV , double *yV)
         scanf("%lf", & sila);
     }
     printf("Wybrana sila: %lf\n", &sila);
+    while (sila > 10 || sila < 1)
+    {
     printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol");
         switch (kierunek)
         {
@@ -69,11 +71,10 @@ void strzal(double *xV , double *yV)
         case 8:
             xV[0] = -10 * sila;
             yV[0] =  10 * sila;
-
-
         default:
             break;
         }
+        printf("kierunek nr %d", kierunek);
 }
 void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
 {
