@@ -36,20 +36,19 @@ void rysowaniestolu()
     line(stolX - dziury, 40, stolX - dziury, stolY);
 
 }
-void strzal(double *xV , double *yV)
+void strzalpilek(double* xV, double* yV)
 {
     int kierunek;
     double sila = 0.0;
     while (sila > 10 || sila < 1)
     {
         printf("Podaj sile od 1-10");
-        scanf("%lf", & sila);
+        scanf("%lf", &sila);
     }
     printf("Wybrana sila: %lf\n", &sila);
     while (sila > 10 || sila < 1)
     {
-    printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol");
-        switch (kierunek)
+        printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3= gora \n4 = dol \n5 = prawo góra\n6 = lewo gora\n 7 = prawo dol\n8 = lewo dol"); switch (kierunek)
         {
         case 1:
             xV[0] = 10 * sila;
@@ -58,23 +57,24 @@ void strzal(double *xV , double *yV)
         case 3:
             yV[0] = 10 * sila;
         case 4:
-            yV[0] = - 10 * sila;
+            yV[0] = -10 * sila;
         case 5:
             xV[0] = 10 * sila;
-            yV[0] = - 10 * sila;
+            yV[0] = -10 * sila;
         case 6:
             xV[0] = -10 * sila;
-            yV[0] = - 10 * sila;
+            yV[0] = -10 * sila;
         case 7:
             xV[0] = -10 * sila;
-            yV[0] =  10 * sila;
+            yV[0] = 10 * sila;
         case 8:
             xV[0] = -10 * sila;
-            yV[0] =  10 * sila;
+            yV[0] = 10 * sila;
         default:
             break;
         }
-        printf("kierunek nr %d", kierunek);
+    }
+    printf("kierunek nr %d", kierunek);
 }
 void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
 {
