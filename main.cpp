@@ -87,7 +87,7 @@ void strzalpilek(double* xV, double* yV)
             yV[0] = 10 * sila;
             break;
         default:
-            printf("Gówno");
+            printf("Błędny kierunek");
             kierunek = 0;
             yV[0] = 0;
             xV[0] = 0;
