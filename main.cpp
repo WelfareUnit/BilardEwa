@@ -40,7 +40,7 @@ void strzalpilek(double* xV, double* yV)
 {
     int kierunek = 0;
     double sila = 0.0;
-    outtextxy(oknoX / 2 - 5, 10, "PRZEJDZ NA OKNO KONSOLI");
+    outtextxy(oknoX / 2 - 5, 10, "PRZEJDZ NA OKNO KONSOLI"); //na gorze ekranu instrukcja dla użytkownika
     while (sila > 10 || sila < 1)
     {
         printf("Podaj sile od 1-10\nSila = ");
@@ -51,11 +51,11 @@ void strzalpilek(double* xV, double* yV)
     {
         printf("Podaj kierunek strzalu \n1 = prawo \n2 = lewo \n3 = gora \n4 = dol \n5 = prawo gora\n6 = lewo gora\n7 = prawo dol\n8 = lewo dol\nKierunek = "); 
         scanf("%d", &kierunek);
-        printf("\nKierunek nr %d", kierunek);
-        switch (kierunek)
+        printf("\nKierunek nr %d", kierunek);       
+        switch (kierunek)                           //żeby nie robić ifów 10000
         {
         case 1:
-            xV[0] = 10 * sila;
+            xV[0] = 10 * sila;                      //w zależności od wybranego kierunku i siły ustawia wartości predkości na x i y 
             yV[0] = 0;
             break;
         case 2:
@@ -110,15 +110,15 @@ void losowaniepilek(double* x, double* xV, double* y, double* yV, int r, int N)
        
         x[i] = rand() % Lx + miX;
         y[i] = rand() % Ly + miY;
-        xV[i] = 0.0;                    // do testów kolizji dorzucałem tutaj na początek coś, ale ogólnie są stacjonarne więc V na poczatku = 0
+        xV[i] = 0.0;                        // do testów kolizji dorzucałem tutaj na początek coś, ale ogólnie są stacjonarne więc V na poczatku = 0
         yV[i] = 0.0;
         for (int j = 0 ; j<i ; j++)         //sprawdzamy terz z poprzednio wylosowanymi, czy się nie nachodzi
         {
             odl = sqrt(pow(x[i] - x[j], 2)+ pow(y[i] - y[j], 2)); //mierzenie odległości między wylosowanymi kulkami
             if (odl< 2*r)
             {
-                i--; //bila będzie jeszcze raz wylosowana, jeśli jej pozycja "nachodzi" na inną bilę
-                break; //nie ma co sprawdzać z następnymi, jak tu już się nie zgadza - wracamy "do góry" i jeszcze raz ją losujemy
+                i--;    //bila będzie jeszcze raz wylosowana, jeśli jej pozycja "nachodzi" na inną bilę
+                break;  //nie ma co sprawdzać z następnymi, jak tu już się nie zgadza - wracamy "do góry" i jeszcze raz ją losujemy
             }
 
         }
@@ -243,6 +243,5 @@ int main()
         kolizjazesciana(xp, xVp, yp, yVp, rp, N);   // i ścianami
         rysowaniepilek(xp, yp, rp, N);              //i finalnie narysować bile (piłki)
     }
-
     return 0;
 }
