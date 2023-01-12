@@ -243,5 +243,9 @@ int main()
         kolizjazesciana(xp, xVp, yp, yVp, rp, N);   // i ścianami
         rysowaniepilek(xp, yp, rp, N);              //i finalnie narysować bile (piłki)
     }
+    free(xp);
+    free(yp);
+    free(xVp);
+    free(yVp);
     return 0;
 }
